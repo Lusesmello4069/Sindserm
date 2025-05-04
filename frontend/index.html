@@ -101,10 +101,10 @@
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-
       const formData = new FormData(form);
+
       try {
-        const response = await fetch('https://ficha-sindserm-backend.onrender.com/enviar', {
+        const response = await fetch('https://ficha-sindserm-frontend.onrender.com/enviar', {
           method: 'POST',
           body: formData
         });
