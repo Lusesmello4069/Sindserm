@@ -4,28 +4,33 @@ const multer = require('multer');
 const nodemailer = require('nodemailer');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
-const cors = require('cors');
+const cors = require('cors'); // ✅ Importa o CORS
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+// ✅ Habilita CORS apenas para seu frontend Render
+app.use(cors({
+  origin: 'https://ficha-sindserm-frontend.onrender.com'
+}));
+
+// Upload de arquivos
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+// Servir arquivos estáticos do frontend
 app.use(express.static(path.join(__dirname, '../frontend')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Rota de envio
 app.post('/enviar', upload.single('foto'), async (req, res) => {
   try {
     const { nome, dataNascimento, Municipio, Bairro, Ruanumero, secretaria, Funcao, Telefone } = req.body;
     const foto = req.file;
 
-    fs.mkdirSync(path.join(__dirname, 'tmp'), { recursive: true });
-    const filePath = path.join(__dirname, 'tmp', 'ficha.pdf');
-    const imgPath = path.join(__dirname, 'tmp', 'foto.jpg');
-
     const doc = new PDFDocument();
+    const filePath = path.join(__dirname, 'ficha.pdf');
     const stream = fs.createWriteStream(filePath);
     doc.pipe(stream);
 
@@ -42,6 +47,7 @@ app.post('/enviar', upload.single('foto'), async (req, res) => {
     doc.moveDown();
 
     if (foto) {
+      const imgPath = path.join(__dirname, 'foto.jpg');
       fs.writeFileSync(imgPath, foto.buffer);
       doc.image(imgPath, { fit: [200, 200], align: 'center' });
     }
@@ -52,14 +58,14 @@ app.post('/enviar', upload.single('foto'), async (req, res) => {
       const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: process.env.EMAIL,
-          pass: process.env.EMAIL_PASSWORD
+          user: 'sindsermsrn2025@gmail.com',
+          pass: 'hveagfvirwqddesb'
         }
       });
 
       await transporter.sendMail({
-        from: '"Ficha dos Sócios SINDSERM SRN - PI" <' + process.env.EMAIL + '>',
-        to: process.env.EMAIL,
+        from: '"Ficha dos Sócios SINDSERM SRN - PI" <sindsermsrn2025@gmail.com>',
+        to: 'sindsermsrn2025@gmail.com',
         subject: 'Nova ficha enviada',
         text: 'Segue em anexo a ficha preenchida.',
         attachments: [
@@ -76,5 +82,5 @@ app.post('/enviar', upload.single('foto'), async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
