@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 
 // ✅ Habilita CORS apenas para seu frontend Render
 app.use(cors({
-  origin: 'https://ficha-sindserm-backend.onrender.com'
+  origin: 'https://ficha-sindserm-frontend.onrender.com'
 }));
 
 // Upload de arquivos
