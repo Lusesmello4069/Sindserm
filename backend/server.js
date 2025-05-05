@@ -9,7 +9,7 @@ const fs = require('fs');
 const cors = require('cors');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Configurar multer para armazenar arquivos na memória (foto do formulário)
 const storage = multer.memoryStorage();
@@ -20,6 +20,7 @@ app.use(cors({
   origin: 'https://ficha-sindserm-frontend.onrender.com',
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
 
 // Middleware para interpretar dados enviados no body
@@ -66,7 +67,7 @@ app.post('/enviar', upload.single('foto'), async (req, res) => {
         service: 'gmail',
         auth: {
           user: 'sindsermsrn2025@gmail.com',
-          pass: 'hveagfvirwqddesb' // Considere usar variáveis de ambiente!
+          pass: process.env.hveagfvirwqddesb
         }
       });
 

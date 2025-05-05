@@ -98,9 +98,12 @@
       const formData = new FormData(form);
 
       try {
-        const response = await fetch('https://ficha-sindserm-backend.onrender.com/enviar', {
+        const response = await fetch('https://Sindserm.onrender.com/enviar', {
           method: 'POST',
-          body: formData
+          body: formData,
+          headers: {
+            // só adicione manualmente o Content-Type se **não** estiver usando FormData
+          }
         });
 
         const result = await response.text();
