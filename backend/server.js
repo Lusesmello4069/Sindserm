@@ -4,24 +4,19 @@ const multer = require('multer');
 const nodemailer = require('nodemailer');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
-const cors = require('cors'); // ✅ Importa o CORS
+const cors = require('cors');  // Adicione essa linha
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
-// ✅ Habilita CORS apenas para seu frontend Render
+// Habilite o CORS para o domínio do frontend no Render
 app.use(cors({
-  origin: 'https://ficha-sindserm-frontend.onrender.com'
+  origin: 'https://ficha-sindserm-frontend.onrender.com',  // URL do frontend
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// Upload de arquivos
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
-// Servir arquivos estáticos do frontend
-app.use(express.static(path.join(__dirname, '../frontend')));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+// Outras configurações do servidor, como multer, rotas, etc...
 
 // Rota de envio
 app.post('/enviar', upload.single('foto'), async (req, res) => {
